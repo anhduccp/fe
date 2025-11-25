@@ -1,327 +1,377 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Search gợi ý</title>
-  <style>
-    :root{
-      --bg: #0f1724;
-      --card: #0b1220;
-      --accent: #06b6d4;
-      --muted: #94a3b8;
-      --white: #e6eef6;
-    }
-    body{
-      font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-      background: linear-gradient(180deg,#071026 0%, #0b1220 100%);
-      color: var(--white);
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin:0;
-      padding:20px;
-    }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Search |Ư</title>
+    <style>
+      :root {
+        --bg: #0f1724;
+        --card: #0b1220;
+        --accent: #06b6d4;
+        --muted: #94a3b8;
+        --white: #e6eef6;
+      }
+      body {
+        font-family: Inter, ui-sans-serif, system-ui, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, #071026 0%, #0b1220 100%);
+        color: var(--white);
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 20px;
+      }
 
-    .search-wrap{
-      width:100%;
-      max-width:560px;
-      position:relative;
-    }
+      .search-wrap {
+        width: 100%;
+        max-width: 560px;
+        position: relative;
+      }
 
-    .search{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      border-radius:12px;
-      padding:8px 12px;
-      box-shadow: 0 6px 20px rgba(2,6,23,0.6);
-      border: 1px solid rgba(255,255,255,0.04);
-    }
+      .search {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.01)
+        );
+        border-radius: 12px;
+        padding: 8px 12px;
+        box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.04);
+      }
 
-    .search input{
-      background:transparent;
-      border:0;
-      outline:0;
-      color:var(--white);
-      font-size:16px;
-      flex:1;
-      padding:8px 6px;
-    }
+      .search input {
+        background: transparent;
+        border: 0;
+        outline: 0;
+        color: var(--white);
+        font-size: 16px;
+        flex: 1;
+        padding: 8px 6px;
+      }
 
-    .search .icon{
-      width:36px;
-      height:36px;
-      display:grid;
-      place-items:center;
-      border-radius:8px;
-      cursor:pointer;
-      transition:background .15s;
-    }
-    .search .icon:hover{ background: rgba(255,255,255,0.02); }
+      .search .icon {
+        width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .search .icon:hover {
+        background: rgba(255, 255, 255, 0.02);
+      }
 
-    .suggestions{
-      position:absolute;
-      top:calc(100% + 8px);
-      left:0;
-      right:0;
-      background:linear-gradient(180deg,#071226,#081226);
-      border-radius:12px;
-      padding:6px;
-      box-shadow: 0 12px 30px rgba(2,6,23,0.6);
-      max-height:320px;
-      overflow:auto;
-      border:1px solid rgba(255,255,255,0.04);
-      z-index:50;
-    }
+      .suggestions {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        right: 0;
+        background: linear-gradient(180deg, #071226, #081226);
+        border-radius: 12px;
+        padding: 6px;
+        box-shadow: 0 12px 30px rgba(2, 6, 23, 0.6);
+        max-height: 320px;
+        overflow: auto;
+        border: 1px solid rgba(255, 255, 255, 0.04);
+        z-index: 50;
+      }
 
-    .suggestions .item{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px;
-      border-radius:8px;
-      cursor:pointer;
-      user-select:none;
-      transition:background .12s, transform .06s;
-    }
-    .suggestions .item:hover,
-    .suggestions .item[aria-selected="true"]{
-      background: linear-gradient(90deg, rgba(6,182,212,0.06), rgba(6,182,212,0.02));
-      transform: translateY(-1px);
-    }
+      .suggestions .item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.12s, transform 0.06s;
+      }
+      .suggestions .item:hover,
+      .suggestions .item[aria-selected="true"] {
+        background: linear-gradient(
+          90deg,
+          rgba(6, 182, 212, 0.06),
+          rgba(6, 182, 212, 0.02)
+        );
+        transform: translateY(-1px);
+      }
 
-    .item .badge{
-      min-width:36px;
-      height:36px;
-      display:grid;
-      place-items:center;
-      border-radius:8px;
-      background: rgba(255,255,255,0.03);
-      font-weight:600;
-      color:var(--muted);
-      font-size:13px;
-    }
+      .item .badge {
+        min-width: 36px;
+        height: 36px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+        font-weight: 600;
+        color: var(--muted);
+        font-size: 13px;
+      }
 
-    .item .text{
-      flex:1;
-      font-size:15px;
-      color:var(--white);
-    }
-    .item .sub{
-      font-size:12px;
-      color:var(--muted);
-    }
+      .item .text {
+        flex: 1;
+        font-size: 15px;
+        color: var(--white);
+      }
+      .item .sub {
+        font-size: 12px;
+        color: var(--muted);
+      }
 
-    .highlight{
-      font-weight:700;
-      color:var(--accent);
-      background: linear-gradient(90deg, rgba(6,182,212,0.06), transparent 60%);
-      padding:2px 4px;
-      border-radius:4px;
-    }
+      .highlight {
+        font-weight: 700;
+        color: var(--accent);
+        background: linear-gradient(
+          90deg,
+          rgba(6, 182, 212, 0.06),
+          transparent 60%
+        );
+        padding: 2px 4px;
+        border-radius: 4px;
+      }
 
-    /* small helper when no results */
-    .empty{
-      padding:18px;
-      text-align:center;
-      color:var(--muted);
-    }
+      /* small helper when no results */
+      .empty {
+        padding: 18px;
+        text-align: center;
+        color: var(--muted);
+      }
 
-    /* responsive */
-    @media (max-width:520px){
-      .search-wrap{ max-width:100%; }
-      .search input{ font-size:15px; }
-    }
-  </style>
-</head>
-<body>
-  <div class="search-wrap" id="searchWrap">
-    <div class="search" role="search" aria-label="Search">
-      <div class="icon" id="searchIcon" title="Search">
-        🔍
+      /* responsive */
+      @media (max-width: 520px) {
+        .search-wrap {
+          max-width: 100%;
+        }
+        .search input {
+          font-size: 15px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="search-wrap" id="searchWrap">
+      <div class="search" role="search" aria-label="Search">
+        <div class="icon" id="searchIcon" title="Search">🔍</div>
+        <input
+          id="searchInput"
+          type="search"
+          autocomplete="off"
+          placeholder="Tìm kiếm... (ví dụ: Hà Nội, Đà Nẵng, museum)"
+          aria-autocomplete="list"
+          aria-controls="suggestList"
+          aria-expanded="false"
+        />
+        <div class="icon" id="clearBtn" title="Clear" style="display: none">
+          ✖
+        </div>
       </div>
-      <input id="searchInput" type="search" autocomplete="off" placeholder="Tìm kiếm... (ví dụ: Hà Nội, Đà Nẵng, museum)" aria-autocomplete="list" aria-controls="suggestList" aria-expanded="false" />
-      <div class="icon" id="clearBtn" title="Clear" style="display:none">✖</div>
+
+      <div class="suggestions" id="suggestions" role="listbox" hidden>
+        <!-- gợi ý sẽ render ở đây -->
+      </div>
     </div>
 
-    <div class="suggestions" id="suggestions" role="listbox" hidden>
-      <!-- gợi ý sẽ render ở đây -->
-    </div>
-  </div>
+    <script>
+      // Dữ liệu mẫu (có thể thay bằng fetch từ API)
+      const DATA = [
+        { title: "Hà Nội - Old Quarter", sub: "Hoàn Kiếm, Hà Nội" },
+        { title: "Hà Nội - Temple of Literature", sub: "Văn Miếu, Đống Đa" },
+        { title: "Hồ Chí Minh City - Ben Thanh Market", sub: "Quận 1, TP.HCM" },
+        { title: "Đà Nẵng - My Khe Beach", sub: "Đà Nẵng, Sơn Trà" },
+        { title: "Hội An Ancient Town", sub: "Quảng Nam" },
+        { title: "Huế - Imperial City", sub: "Thừa Thiên Huế" },
+        { title: "Saigon Notre-Dame Cathedral", sub: "Quận 1, TP.HCM" },
+        { title: "Sapa - Fansipan", sub: "Lào Cai" },
+        { title: "Nha Trang Beach", sub: "Khánh Hòa" },
+        { title: "Phú Quốc - Long Beach", sub: "Kiên Giang" },
+        { title: "Da Lat - Valley of Love", sub: "Lâm Đồng" },
+      ];
 
-<script>
-  // Dữ liệu mẫu (có thể thay bằng fetch từ API)
-  const DATA = [
-    {title: "Hà Nội - Old Quarter", sub: "Hoàn Kiếm, Hà Nội"},
-    {title: "Hà Nội - Temple of Literature", sub: "Văn Miếu, Đống Đa"},
-    {title: "Hồ Chí Minh City - Ben Thanh Market", sub: "Quận 1, TP.HCM"},
-    {title: "Đà Nẵng - My Khe Beach", sub: "Đà Nẵng, Sơn Trà"},
-    {title: "Hội An Ancient Town", sub: "Quảng Nam"},
-    {title: "Huế - Imperial City", sub: "Thừa Thiên Huế"},
-    {title: "Saigon Notre-Dame Cathedral", sub: "Quận 1, TP.HCM"},
-    {title: "Sapa - Fansipan", sub: "Lào Cai"},
-    {title: "Nha Trang Beach", sub: "Khánh Hòa"},
-    {title: "Phú Quốc - Long Beach", sub: "Kiên Giang"},
-    {title: "Da Lat - Valley of Love", sub: "Lâm Đồng"}
-  ];
+      const input = document.getElementById("searchInput");
+      const suggestionsEl = document.getElementById("suggestions");
+      const clearBtn = document.getElementById("clearBtn");
+      const searchWrap = document.getElementById("searchWrap");
 
-  const input = document.getElementById('searchInput');
-  const suggestionsEl = document.getElementById('suggestions');
-  const clearBtn = document.getElementById('clearBtn');
-  const searchWrap = document.getElementById('searchWrap');
+      let filtered = [];
+      let selectedIndex = -1;
 
-  let filtered = [];
-  let selectedIndex = -1;
+      function escapeHtml(s) {
+        return s.replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[m])
+        );
+      }
 
-  function escapeHtml(s){
-    return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m]));
-  }
+      function highlightMatch(text, query) {
+        if (!query) return escapeHtml(text);
+        const q = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // escape regex
+        const re = new RegExp("(" + q + ")", "ig");
+        return escapeHtml(text).replace(
+          re,
+          '<span class="highlight">$1</span>'
+        );
+      }
 
-  function highlightMatch(text, query){
-    if(!query) return escapeHtml(text);
-    const q = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // escape regex
-    const re = new RegExp('('+q+')','ig');
-    return escapeHtml(text).replace(re, '<span class="highlight">$1</span>');
-  }
+      function renderSuggestions() {
+        suggestionsEl.innerHTML = "";
+        const q = input.value.trim();
+        if (filtered.length === 0) {
+          suggestionsEl.innerHTML = `<div class="empty">Không tìm thấy kết quả cho "<strong>${escapeHtml(
+            q
+          )}</strong>"</div>`;
+          suggestionsEl.hidden = false;
+          input.setAttribute("aria-expanded", "true");
+          return;
+        }
 
-  function renderSuggestions(){
-    suggestionsEl.innerHTML = '';
-    const q = input.value.trim();
-    if(filtered.length === 0){
-      suggestionsEl.innerHTML = `<div class="empty">Không tìm thấy kết quả cho "<strong>${escapeHtml(q)}</strong>"</div>`;
-      suggestionsEl.hidden = false;
-      input.setAttribute('aria-expanded','true');
-      return;
-    }
+        filtered.forEach((item, idx) => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.setAttribute("role", "option");
+          div.setAttribute(
+            "aria-selected",
+            idx === selectedIndex ? "true" : "false"
+          );
+          div.dataset.index = idx;
 
-    filtered.forEach((item, idx) => {
-      const div = document.createElement('div');
-      div.className = 'item';
-      div.setAttribute('role','option');
-      div.setAttribute('aria-selected', idx === selectedIndex ? 'true' : 'false');
-      div.dataset.index = idx;
-
-      div.innerHTML = `
-        <div class="badge">${idx+1}</div>
+          div.innerHTML = `
+        <div class="badge">${idx + 1}</div>
         <div style="flex:1">
           <div class="text">${highlightMatch(item.title, q)}</div>
           <div class="sub">${highlightMatch(item.sub, q)}</div>
         </div>
       `;
-      div.addEventListener('click', ()=> choose(idx) );
-      div.addEventListener('mouseenter', ()=> {
-        selectedIndex = idx;
+          div.addEventListener("click", () => choose(idx));
+          div.addEventListener("mouseenter", () => {
+            selectedIndex = idx;
+            updateSelection();
+          });
+          suggestionsEl.appendChild(div);
+        });
+        suggestionsEl.hidden = false;
+        input.setAttribute("aria-expanded", "true");
         updateSelection();
-      });
-      suggestionsEl.appendChild(div);
-    });
-    suggestionsEl.hidden = false;
-    input.setAttribute('aria-expanded','true');
-    updateSelection();
-  }
-
-  function updateSelection(){
-    const items = suggestionsEl.querySelectorAll('.item');
-    items.forEach((el, i) => {
-      el.setAttribute('aria-selected', i === selectedIndex ? 'true' : 'false');
-      if(i === selectedIndex){
-        // ensure visible
-        el.scrollIntoView({block:'nearest'});
       }
-    });
-  }
 
-  function choose(idx){
-    const item = filtered[idx];
-    if(!item) return;
-    input.value = item.title;
-    closeSuggestions();
-    // you can do other actions here (navigate, submit, call API...)
-    console.log('Đã chọn:', item);
-  }
+      function updateSelection() {
+        const items = suggestionsEl.querySelectorAll(".item");
+        items.forEach((el, i) => {
+          el.setAttribute(
+            "aria-selected",
+            i === selectedIndex ? "true" : "false"
+          );
+          if (i === selectedIndex) {
+            // ensure visible
+            el.scrollIntoView({ block: "nearest" });
+          }
+        });
+      }
 
-  function closeSuggestions(){
-    suggestionsEl.hidden = true;
-    input.setAttribute('aria-expanded','false');
-    selectedIndex = -1;
-  }
-
-  function openSuggestions(){
-    if(suggestionsEl.childElementCount > 0) suggestionsEl.hidden = false;
-    input.setAttribute('aria-expanded','true');
-  }
-
-  function filterData(q){
-    if(!q){
-      // show top N hot suggestions when empty — optional
-      filtered = DATA.slice(0,6);
-      return;
-    }
-    const s = q.toLowerCase();
-    filtered = DATA.filter(it => (it.title + ' ' + it.sub).toLowerCase().includes(s)).slice(0,12);
-  }
-
-  input.addEventListener('input', (e)=>{
-    const v = input.value;
-    clearBtn.style.display = v ? 'grid' : 'none';
-    filterData(v);
-    selectedIndex = -1;
-    renderSuggestions();
-  });
-
-  input.addEventListener('keydown', (e)=>{
-    if(suggestionsEl.hidden) return;
-    const max = filtered.length - 1;
-    if(e.key === 'ArrowDown'){
-      e.preventDefault();
-      if(selectedIndex < max) selectedIndex++;
-      else selectedIndex = 0;
-      updateSelection();
-    } else if(e.key === 'ArrowUp'){
-      e.preventDefault();
-      if(selectedIndex > 0) selectedIndex--;
-      else selectedIndex = max;
-      updateSelection();
-    } else if(e.key === 'Enter'){
-      e.preventDefault();
-      if(selectedIndex >= 0) choose(selectedIndex);
-      else {
-        // no selection -> perform search with input.value
-        console.log('Search for:', input.value.trim());
+      function choose(idx) {
+        const item = filtered[idx];
+        if (!item) return;
+        input.value = item.title;
         closeSuggestions();
+        // you can do other actions here (navigate, submit, call API...)
+        console.log("Đã chọn:", item);
       }
-    } else if(e.key === 'Escape'){
-      closeSuggestions();
-    }
-  });
 
-  clearBtn.addEventListener('click', ()=>{
-    input.value = '';
-    clearBtn.style.display = 'none';
-    filterData('');
-    renderSuggestions();
-    input.focus();
-  });
+      function closeSuggestions() {
+        suggestionsEl.hidden = true;
+        input.setAttribute("aria-expanded", "false");
+        selectedIndex = -1;
+      }
 
-  // click outside to close
-  document.addEventListener('click', (ev)=>{
-    if(!searchWrap.contains(ev.target)){
-      closeSuggestions();
-    }
-  });
+      function openSuggestions() {
+        if (suggestionsEl.childElementCount > 0) suggestionsEl.hidden = false;
+        input.setAttribute("aria-expanded", "true");
+      }
 
-  // on focus, show suggestions (top items)
-  input.addEventListener('focus', ()=>{
-    filterData(input.value.trim());
-    renderSuggestions();
-  });
+      function filterData(q) {
+        if (!q) {
+          // show top N hot suggestions when empty — optional
+          filtered = DATA.slice(0, 6);
+          return;
+        }
+        const s = q.toLowerCase();
+        filtered = DATA.filter((it) =>
+          (it.title + " " + it.sub).toLowerCase().includes(s)
+        ).slice(0, 12);
+      }
 
-  // init: show top suggestions
-  filterData('');
-  renderSuggestions();
-</script>
-</body>
+      input.addEventListener("input", (e) => {
+        const v = input.value;
+        clearBtn.style.display = v ? "grid" : "none";
+        filterData(v);
+        selectedIndex = -1;
+        renderSuggestions();
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (suggestionsEl.hidden) return;
+        const max = filtered.length - 1;
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (selectedIndex < max) selectedIndex++;
+          else selectedIndex = 0;
+          updateSelection();
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (selectedIndex > 0) selectedIndex--;
+          else selectedIndex = max;
+          updateSelection();
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (selectedIndex >= 0) choose(selectedIndex);
+          else {
+            // no selection -> perform search with input.value
+            console.log("Search for:", input.value.trim());
+            closeSuggestions();
+          }
+        } else if (e.key === "Escape") {
+          closeSuggestions();
+        }
+      });
+
+      clearBtn.addEventListener("click", () => {
+        input.value = "";
+        clearBtn.style.display = "none";
+        filterData("");
+        renderSuggestions();
+        input.focus();
+      });
+
+      // click outside to close
+      document.addEventListener("click", (ev) => {
+        if (!searchWrap.contains(ev.target)) {
+          closeSuggestions();
+        }
+      });
+
+      // on focus, show suggestions (top items)
+      input.addEventListener("focus", () => {
+        filterData(input.value.trim());
+        renderSuggestions();
+      });
+
+      // init: show top suggestions
+      filterData("");
+      renderSuggestions();
+    </script>
+  </body>
 </html>
